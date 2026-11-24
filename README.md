@@ -38,6 +38,11 @@ Single models (country-day demeaned): xgb 0.5447, et 0.5439, lgbm 0.5437, logit 
 cat 0.5433, hgb 0.5433, enet 0.5432, ridge 0.5431, mlp 0.5398. OOF correlations 0.86–0.99.
 Equal-weight average beats a nested-CV non-negative stacker (0.5440, overfits to RF).
 
+## Hyper-parameter search (`python -m src.tune xgb 24`, `python -m src.tune et 14`)
+XGBoost best 0.5456 (lr 0.03, depth 3, min_child_weight 10, subsample 0.7, colsample 0.9,
+lambda 50, gamma 1; median trial 0.5441). ExtraTrees flat (best 0.5437, median 0.5434).
+Ensemble with tuned XGB: 0.5450, ICIR 0.477 (vs 0.475). Results: reports/tune_*.csv.
+
 ## Public factors (src/public_factors.py, `python -m src.build_public`)
 Adapted from: Gao-Han-Li-Zhou (2018 JFE) market intraday momentum; Baltussen-Da-Lammers-Martens
 (2025) end-of-day reversal; Kakushadze (2016) 101 Formulaic Alphas; technical indicators

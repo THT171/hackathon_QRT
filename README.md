@@ -70,3 +70,11 @@ Submission: `ID,Close return` for all 219,157 IDs (train 0–144,224 + test 144,
 python -m src.run --model benchmark   # reproduce the 0.523 benchmark
 python -m src.run --model lgbm        # intraday features + LightGBM (binary, weighted by |y|)
 ```
+
+## Paper-based wide factor set (`python -m src.alpha158`, `python -m src.wide`)
+- Qlib Alpha158 (price part, 5-min bars, windows 3/6/12/24/48) + Alpha360-style raw vol-scaled
+  return path and 30-min blocks: 153 factors. Harvey-Liu-Zhu (2016) hurdle |t|>3: 99 pass.
+  Best new single factor MA3 (RankIC 0.057, t 15.6).
+- Gu-Kelly-Xiu (2020) style: ranks of 161 characteristics into ridge / tuned XGB / LightGBM.
+  Scores flat (0.5436-0.5439) but fold std halves (XGB 0.0044 -> 0.0022).
+- Ensembles: best ICIR = narrow3+wide3 (0.483, score 0.5444); best score still avg9_xgb_tuned (0.5450).

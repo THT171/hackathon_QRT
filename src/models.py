@@ -21,6 +21,9 @@ P = "data/processed/"
 META = ["ID", "DATE_ID", "STOCK_ID", "COUNTRY", "CLOSE_TIME", "y"]
 CTX = ["country_code", "summer", "half_day", "cs_size", "stock_rv"]
 
+PUBLIC_ADD = ["a101_9_signcons", "cn_upper_shadow", "cn_lower_shadow", "ta_boll_b",
+              "peer_res6_gap", "ta_stoch_k"]
+
 LGB = dict(objective="binary", learning_rate=0.02, num_leaves=15, min_data_in_leaf=1000,
            feature_fraction=0.6, bagging_fraction=0.7, bagging_freq=1, lambda_l2=50.0,
            verbose=-1, seed=0, num_threads=8)
@@ -53,10 +56,17 @@ def main():
     rep = pd.read_csv("reports/factor_report.csv", index_col=0)
     cand = rep[rep.absICIR > 0.05].index.tolist()
     sel = pd.read_csv("reports/selected_factors.csv").iloc[:, 0].tolist()
+    # public factors with significant incremental IC (partial |t| > 2, reports/public_incremental.csv)
+    pub_cols = PUBLIC_ADD
+    if pub_cols:
+        tr = pd.concat([tr, pd.read_parquet(P + "public_train.parquet")[pub_cols]], axis=1)
+        te = pd.concat([te, pd.read_parquet(P + "public_test.parquet")[pub_cols]], axis=1)
+        cand, sel = cand + pub_cols, sel + ["a101_9_signcons", "cn_upper_shadow", "cn_lower_shadow", "peer_res6_gap"]
 
     Rtr, Rte = rank_frame(tr, cand), rank_frame(te, cand)
     raw_cols = [c for c in cand if c.endswith("_z") or c.startswith("z_") or c in
-                ("path_eff", "bars_since_high", "bars_since_low", "rsj", "beta", "rv")]
+                ("path_eff", "bars_since_high", "bars_since_low", "rsj", "beta", "rv")] + \
+               ["cn_upper_shadow", "cn_lower_shadow", "ta_stoch_k"]
     Xtr = pd.concat([Rtr, tr[raw_cols + CTX]], axis=1)
     Xte = pd.concat([Rte, te[raw_cols + CTX]], axis=1)
 

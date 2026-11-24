@@ -1,0 +1,10 @@
+data/raw/
+data/processed/
+submissions/*.csv
+*.parquet
+*.zip
+__pycache__/
+.ipynb_checkpoints/
+.venv/
+.env
+kaggle.json

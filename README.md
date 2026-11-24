@@ -30,7 +30,13 @@ Benchmark: `-(last 5-min return)`, CV 0.523 (4 folds by DATE_ID).
 | ridge on factor ranks | 0.5432 |
 | lgbm v2 on factor library | 0.5437 |
 | ridge + lgbm blend, country-day demeaned | 0.5446 |
-| **+ 6 public factors (blend)** | **0.5447** (ICIR 0.475, Sharpe 14.2) |
+| + 6 public factors (ridge+lgbm blend) | 0.5447 (ICIR 0.475, Sharpe 14.2) |
+| **equal-weight avg of 9 models (zoo, no MLP)** | **0.5451** (ICIR 0.475) |
+
+## Model zoo (`python -m src.zoo <models>`, `python -m src.stack`)
+Single models (country-day demeaned): xgb 0.5447, et 0.5439, lgbm 0.5437, logit 0.5435, rf 0.5434,
+cat 0.5433, hgb 0.5433, enet 0.5432, ridge 0.5431, mlp 0.5398. OOF correlations 0.86–0.99.
+Equal-weight average beats a nested-CV non-negative stacker (0.5440, overfits to RF).
 
 ## Public factors (src/public_factors.py, `python -m src.build_public`)
 Adapted from: Gao-Han-Li-Zhou (2018 JFE) market intraday momentum; Baltussen-Da-Lammers-Martens

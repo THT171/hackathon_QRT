@@ -20,6 +20,12 @@ kaggle competitions download -c qrt-x-eth-hackathon-24-11-2026 -p data/raw
 cutoff (30 min before close, up to 96 prices). Predict the cutoff→close return **relative to the
 country-day mean**. Score = |y|-weighted accuracy of the predicted sign (0 is always wrong).
 Benchmark: `-(last 5-min return)`, CV 0.523 (4 folds by DATE_ID).
+
+## Results (4-fold CV by DATE_ID)
+| model | CV |
+|---|---|
+| benchmark | 0.5227 ± 0.0018 |
+| lgbm v1 (intraday features) | 0.5414 ± 0.0022 |
 Submission: `ID,Close return` for all 219,157 IDs (train 0–144,224 + test 144,225–219,156).
 
 ## Run

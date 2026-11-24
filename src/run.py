@@ -87,7 +87,11 @@ def main():
         pd.DataFrame({"ID": train["ID"], TARGET: oof}),
         pd.DataFrame({"ID": test["ID"], TARGET: pred_te}),
     ])
-    sample = pd.read_csv(Path(args.raw) / "sample_submission.csv")
+    sample_path = Path(args.raw) / "sample_submission.csv"
+    if sample_path.exists():
+        sample = pd.read_csv(sample_path)
+    else:  # archive ships without it: IDs are train 0..144224 + test 144225..219156
+        sample = pd.DataFrame({"ID": np.sort(np.concatenate([train["ID"], test["ID"]]))})
     sub = sample[["ID"]].merge(sub, on="ID", how="left")
     sub[TARGET] = sub[TARGET].fillna(EPS).replace(0, EPS)
     assert len(sub) == len(sample) and sub["ID"].is_unique and np.isfinite(sub[TARGET]).all()
